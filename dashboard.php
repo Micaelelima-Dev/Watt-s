@@ -126,10 +126,10 @@ if (!isset($_SESSION['usuario'])) {
 
     <div class="sidebar">
         <h4><i class="fas fa-bolt"></i>Watt’s</h4>
-        <a href="index.php"><i class="fas fa-users"></i> Usuários</a>
-        <a href="./funcionarios/cadastrar.php"><i class="fas fa-user-tie"></i> Funcionários</a>
-        <a href="./produtos/cadastrar.php"><i class="fas fa-box-open"></i> Produtos</a>
-        <a href="./metas/cadastrar.php"><i class="fas fa-bullseye"></i> Metas</a>
+        <a href="./usuarios/index.php"><i class="fas fa-users"></i> Usuários</a>
+        <a href="./funcionarios/listar.php"><i class="fas fa-user-tie"></i> Funcionários</a>
+        <a href="./produtos/listar.php"><i class="fas fa-box-open"></i> Produtos</a>
+        <a href="./metas/listar.php"><i class="fas fa-bullseye"></i> Metas</a>
         <a href="./vendas/cadastrar.php"><i class="fas fa-cash-register"></i> Vendas</a>
         <a href="logout.php"><i class="fas fa-sign-out-alt"></i> Sair</a>
     </div>

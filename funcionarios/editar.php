@@ -23,15 +23,19 @@ if ($resultado->num_rows != 1) {
 
 $funcionario = $resultado->fetch_assoc();
 
-// Atualização dos dados
+$data_demissao = $funcionario['data_demissao'] ?? null;
+$data_demissao_preenchida = $data_demissao ? $data_demissao : date('Y-m-d');
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nome = $_POST['nome'];
     $cpf = $_POST['cpf'];
     $data_contratacao = $_POST['data_contratacao'];
+    $data_demissao = $_POST['data_demissao'];
+    $data_demissao = empty($data_demissao) ? null : $data_demissao;
 
-    $sqlUpdate = "UPDATE funcionarios SET nome_funcionario = ?, cpf = ?, data_contratacao = ? WHERE id_funcionario = ?";
+    $sqlUpdate = "UPDATE funcionarios SET nome_funcionario = ?, cpf = ?, data_contratacao = ?, data_demissao = ? WHERE id_funcionario = ?";
     $stmtUpdate = $conexao->prepare($sqlUpdate);
-    $stmtUpdate->bind_param("sssi", $nome, $cpf, $data_contratacao, $id);
+    $stmtUpdate->bind_param("ssssi", $nome, $cpf, $data_contratacao, $data_demissao, $id);
 
     if ($stmtUpdate->execute()) {
         echo "<script>alert('Funcionário atualizado com sucesso!'); window.location.href='listar.php';</script>";
@@ -39,6 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo "Erro ao atualizar: " . $stmtUpdate->error;
     }
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -129,6 +134,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <label for="data_contratacao">Data de Contratação:</label>
             <input type="date" name="data_contratacao" id="data_contratacao" required
                 value="<?= $funcionario['data_contratacao'] ?>">
+            <label for="data_demissao">Data de Demissão:</label>
+            <input type="date" name="data_demissao" id="data_demissao"
+                value="<?= htmlspecialchars($data_demissao_preenchida) ?>">
+
 
             <input type="submit" value="Salvar Alterações">
         </form>

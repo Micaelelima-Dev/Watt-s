@@ -128,11 +128,21 @@ include('../includes/conexao.php');
 
         <?php
         if (isset($_POST['cadastrar'])) {
-            $nome_funcionario = $_POST['nome'];
-            $cpf = $_POST['cpf'];
-            $data_contratacao = $_POST['data_contratacao'];
+    $nome_funcionario = $_POST['nome'];
+    $cpf = $_POST['cpf'];
+    $data_contratacao = $_POST['data_contratacao'];
 
-            if ($conexao) {
+        if ($conexao) {
+            // Verifica se já existe CPF ou nome no banco
+            $stmt_verifica = $conexao->prepare("SELECT * FROM funcionarios WHERE cpf = ?");
+            $stmt_verifica->bind_param("s", $cpf);
+            $stmt_verifica->execute();
+            $resultado = $stmt_verifica->get_result();
+
+            if ($resultado->num_rows > 0) {
+                echo "<p class='mensagem' style='color: red;'>Erro: Já existe um funcionário cadastrado com este CPF ou nome.</p>";
+            } else {
+                // Cadastro permitido
                 $stmt = $conexao->prepare("INSERT INTO funcionarios (nome_funcionario, cpf, data_contratacao, data_demissao, ativo) VALUES (?, ?, ?, NULL, 1)");
                 $stmt->bind_param("sss", $nome_funcionario, $cpf, $data_contratacao);
 
@@ -141,10 +151,12 @@ include('../includes/conexao.php');
                 } else {
                     echo "<p class='mensagem' style='color: red;'>Erro ao cadastrar funcionário: " . $stmt->error . "</p>";
                 }
-            } else {
-                echo "<p class='mensagem' style='color: red;'>Erro na conexão com o banco de dados.</p>";
             }
+        } else {
+            echo "<p class='mensagem' style='color: red;'>Erro na conexão com o banco de dados.</p>";
         }
+    }
+
         ?>
     </div>
 
@@ -158,42 +170,6 @@ document.getElementById('cpf').addEventListener('input', function(e) {
     cpf = cpf.replace(/(\d{3})(\d)/, '$1.$2');
     cpf = cpf.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
     e.target.value = cpf;
-});
-
-// Validação de CPF
-function validarCPF(cpf) {
-    cpf = cpf.replace(/\D/g, '');
-
-    if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false;
-
-    let soma = 0;
-    for (let i = 0; i < 9; i++) {
-        soma += parseInt(cpf.charAt(i)) * (10 - i);
-    }
-
-    let resto = 11 - (soma % 11);
-    let digito1 = resto >= 10 ? 0 : resto;
-
-    if (digito1 !== parseInt(cpf.charAt(9))) return false;
-
-    soma = 0;
-    for (let i = 0; i < 10; i++) {
-        soma += parseInt(cpf.charAt(i)) * (11 - i);
-    }
-
-    resto = 11 - (soma % 11);
-    let digito2 = resto >= 10 ? 0 : resto;
-
-    return digito2 === parseInt(cpf.charAt(10));
-}
-
-// Impede envio se CPF inválido
-document.querySelector('form').addEventListener('submit', function(e) {
-    const cpf = document.getElementById('cpf').value;
-    if (!validarCPF(cpf)) {
-        e.preventDefault();
-        alert('CPF inválido. Verifique e tente novamente.');
-    }
 });
 </script>
 

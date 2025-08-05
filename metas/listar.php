@@ -85,16 +85,13 @@ $resultado = $conexao->query($sql);
         font-weight: bold;
     }
 
-    .btn-cadastrar:hover {
-        background-color: #167e19ff;
-    }
 
     .btn-voltar {
         display: block;
         margin-top: 20px;
         text-align: center;
         color: #077910;
-        text-decoration: none;
+
     }
     </style>
 </head>
@@ -126,8 +123,8 @@ $resultado = $conexao->query($sql);
                         echo "<td>" . date('m/Y', strtotime($meta['mes_meta'])) . "</td>";
                         echo "<td>R$ " . number_format($meta['valor_meta'], 2, ',', '.') . "</td>";
                         echo "<td>
-                                <a class='btn btn-editar' href='editar.php?id=" . $meta['id_meta'] . "'>Editar</a>
-                                <a class='btn btn-excluir' href='excluir.php?id=" . $meta['id_meta'] . "' onclick='return confirm(\"Deseja realmente excluir esta meta?\")'>Excluir</a>
+                                <a class='btn btn-editar' href='editar.php?id_meta=" . $meta['id_meta'] . "'>Editar</a>
+                                <a class='btn btn-excluir' href='excluir.php?id_meta=" . $meta['id_meta'] . "' onclick='return confirm(\"Deseja realmente excluir esta meta?\")'>Excluir</a>
                               </td>";
                         echo "</tr>";
                     }
