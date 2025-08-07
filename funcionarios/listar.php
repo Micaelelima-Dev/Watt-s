@@ -1,14 +1,38 @@
 <?php
 include('../includes/conexao.php');
+
+$sql = "SELECT f.id_funcionario, f.nome_funcionario, f.cpf, f.data_contratacao, f.ativo, f.data_demissao,
+        COALESCE(SUM(v.valor_total), 0) AS total_vendas_ano,
+        COALESCE(SUM(m.valor_meta), 0) AS total_metas_ano
+    FROM funcionarios f
+    LEFT JOIN vendas v ON v.id_funcionario = f.id_funcionario AND YEAR(v.data_venda) = YEAR(CURDATE())
+    LEFT JOIN metas m ON m.id_funcionario = f.id_funcionario AND YEAR(STR_TO_DATE(CONCAT(m.mes_meta, '-01'), '%Y-%m-%d')) = YEAR(CURDATE())
+    GROUP BY f.id_funcionario
+    ORDER BY f.nome_funcionario ASC";
+
+$resultado = $conexao->query($sql);
+
+$funcionarios = [];
+$vendas = [];
+$metas = [];
+
+if ($resultado && $resultado->num_rows > 0) {
+    while ($row = $resultado->fetch_assoc()) {
+        $funcionarios[] = $row['nome_funcionario'];
+        $vendas[] = (float)$row['total_vendas_ano'];
+        $metas[] = (float)$row['total_metas_ano'];
+    }
+}
 ?>
 
 <!DOCTYPE html>
 <html lang="pt-br">
 
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title>Lista de Funcionários | Watt’s</title>
     <style>
+    /* Estilo padrão Watt's */
     body {
         font-family: 'Segoe UI', sans-serif;
         background-color: #f4f9f6;
@@ -17,8 +41,8 @@ include('../includes/conexao.php');
     }
 
     .container {
-        max-width: 900px;
-        background-color: #ffffff;
+        max-width: 1000px;
+        background-color: #fff;
         margin: 40px auto;
         padding: 30px;
         border-radius: 8px;
@@ -34,6 +58,7 @@ include('../includes/conexao.php');
     table {
         width: 100%;
         border-collapse: collapse;
+        margin-bottom: 40px;
     }
 
     th,
@@ -41,6 +66,7 @@ include('../includes/conexao.php');
         padding: 12px 15px;
         border: 1px solid #ddd;
         text-align: left;
+        vertical-align: middle;
     }
 
     th {
@@ -53,7 +79,7 @@ include('../includes/conexao.php');
     }
 
     a {
-        color: #4CAF50;
+        color: #077910;
         text-decoration: none;
         font-weight: bold;
     }
@@ -65,13 +91,50 @@ include('../includes/conexao.php');
     .btn-voltar {
         display: inline-block;
         margin-top: 20px;
-        color: #4CAF50;
+        color: #077910;
         text-decoration: none;
         font-weight: bold;
     }
 
     .btn-voltar:hover {
         text-decoration: underline;
+    }
+
+    form {
+        display: inline;
+        margin: 0;
+        padding: 0;
+    }
+
+    form button {
+        background-color: #077910;
+        border: none;
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+        padding: 5px 10px;
+        border-radius: 4px;
+        font-family: 'Segoe UI', sans-serif;
+        font-size: 0.9em;
+        transition: background-color 0.3s;
+    }
+
+    form button:hover {
+        background-color: #055b05;
+    }
+
+    /* Coluna vendas/meta alinhada */
+    .vendas-meta {
+        white-space: nowrap;
+        font-weight: bold;
+        font-size: 0.9em;
+    }
+
+    /* Container do gráfico */
+    #grafico-container {
+        width: 100%;
+        max-width: 900px;
+        margin: 0 auto;
     }
     </style>
 </head>
@@ -87,44 +150,49 @@ include('../includes/conexao.php');
                     <th>CPF</th>
                     <th>Data de Admissão</th>
                     <th>Ativo</th>
-                    <th>Data de Demissão</th> <!-- NOVO -->
+                    <th>Data de Demissão</th>
+                    <th>Vendas / Meta (Ano Atual)</th>
                     <th>Ações</th>
                 </tr>
             </thead>
             <tbody>
                 <?php
-            $sql = "SELECT id_funcionario, nome_funcionario, cpf, data_contratacao, ativo, data_demissao 
-                    FROM funcionarios 
-                    ORDER BY nome_funcionario ASC";
-            $resultado = $conexao->query($sql);
+                // Resetar ponteiro para refazer fetch e gerar tabela
+                $resultado->data_seek(0);
 
-            if ($resultado && $resultado->num_rows > 0) {
                 while ($func = $resultado->fetch_assoc()) {
                     echo "<tr>";
                     echo "<td>" . htmlspecialchars($func['nome_funcionario']) . "</td>";
                     echo "<td>" . htmlspecialchars($func['cpf']) . "</td>";
                     echo "<td>" . htmlspecialchars(date('d/m/Y', strtotime($func['data_contratacao']))) . "</td>";
                     echo "<td>" . ($func['ativo'] ? 'Sim' : 'Não') . "</td>";
-                    echo "<td>" . 
-                        (!empty($func['data_demissao']) 
-                            ? htmlspecialchars(date('d/m/Y', strtotime($func['data_demissao']))) 
-                            : '—') 
+                    echo "<td>" .
+                        (!empty($func['data_demissao'])
+                            ? htmlspecialchars(date('d/m/Y', strtotime($func['data_demissao'])))
+                            : '—')
                         . "</td>";
+                    echo "<td class='vendas-meta'>R$ " . number_format($func['total_vendas_ano'], 2, ',', '.') . " / R$ " . number_format($func['total_metas_ano'], 2, ',', '.') . "</td>";
                     echo "<td>
-                            <a href='editar.php?id=" . $func['id_funcionario'] . "'>Editar</a> | 
-                            <a href='demitir.php?funcionario=" . $func['id_funcionario'] . "' onclick=\"return confirm('Tem certeza que deseja desativar este funcionário?');\">Demitir</a>
-                        </td>";
+                            <a href='editar.php?id=" . $func['id_funcionario'] . "'>Editar</a> | ";
+
+                    echo "<form method='post' action='demitir.php' onsubmit='return confirm(\"Tem certeza?\");'>";
+                    echo "<input type='hidden' name='id_funcionario' value='" . $func['id_funcionario'] . "'>";
+                    echo "<input type='hidden' name='acao' value='" . ($func['ativo'] ? 'demitir' : 'ativar') . "'>";
+                    echo "<button type='submit'>" . ($func['ativo'] ? 'Demitir' : 'Ativar') . "</button>";
+                    echo "</form>";
+
+                    echo "</td>";
                     echo "</tr>";
                 }
-            } else {
-                echo "<tr><td colspan='6' style='text-align:center;'>Nenhum funcionário cadastrado.</td></tr>";
-            }
-            ?>
+                ?>
             </tbody>
         </table>
 
+        <div id="grafico-container">
+            <canvas id="graficoVendasMetas"></canvas>
+        </div>
+
         <a href="cadastrar.php" class="btn-voltar">
-            <!-- ícone de cadastrar -->
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                 class="bi bi-person-fill-add" viewBox="0 0 16 16">
                 <path
@@ -135,7 +203,6 @@ include('../includes/conexao.php');
         </a><br>
 
         <a href="../dashboard.php" class="btn-voltar">
-            <!-- ícone de voltar -->
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                 class="bi bi-arrow-left-circle" viewBox="0 0 16 16">
                 <path fill-rule="evenodd"
@@ -143,6 +210,73 @@ include('../includes/conexao.php');
             </svg> Voltar para o Menu principal
         </a>
     </div>
+
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+    const ctx = document.getElementById('graficoVendasMetas').getContext('2d');
+
+    const nomes = <?php echo json_encode($funcionarios); ?>;
+    const vendas = <?php echo json_encode($vendas); ?>;
+    const metas = <?php echo json_encode($metas); ?>;
+
+    const data = {
+        labels: nomes,
+        datasets: [{
+                label: 'Vendas Acumuladas',
+                data: vendas,
+                backgroundColor: 'rgba(7, 121, 16, 0.7)', // verde Watt's
+            },
+            {
+                label: 'Metas',
+                data: metas,
+                backgroundColor: 'rgba(71, 183, 88, 0.7)', // verde claro Watt's
+            }
+        ]
+    };
+
+    const config = {
+        type: 'bar',
+        data: data,
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: {
+                        font: {
+                            family: "'Segoe UI', sans-serif"
+                        }
+                    }
+                },
+                tooltip: {
+                    mode: 'index',
+                    intersect: false,
+                    callbacks: {
+                        label: function(context) {
+                            return context.dataset.label + ': R$ ' + context.parsed.y.toFixed(2).replace('.',
+                                ',');
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) {
+                            return 'R$ ' + value.toLocaleString('pt-BR', {
+                                minimumFractionDigits: 2
+                            });
+                        }
+                    }
+                }
+            }
+        }
+    };
+
+    const graficoVendasMetas = new Chart(ctx, config);
+    </script>
 </body>
 
 </html>

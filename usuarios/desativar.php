@@ -9,7 +9,7 @@ if (isset($_GET['id_usuario'])) {
     $stmt->bind_param("i", $id);
 
     if ($stmt->execute()) {
-        header("Location: ../index.php?msg=usuario_desativado");
+        header("Location: ./index.php?msg=usuario_desativado");
         exit();
     } else {
         echo "Erro ao desativar usuário.";

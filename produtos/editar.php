@@ -28,7 +28,13 @@ if (isset($_POST['atualizar'])) {
     $valor = floatval($_POST['valor']);
     $quantidade = intval($_POST['quantidade']);
 
-    $sqlUpdate = "UPDATE produtos SET nome_produto = ?, valor_unitario = ?, quantidade_estoque = ? WHERE id_produto = ?";
+if ($quantidade < 0) {
+    echo "<script>alert('A quantidade não pode ser negativa.'); window.history.back();</script>";
+    exit;
+}
+
+$sqlUpdate = "UPDATE produtos SET nome_produto = ?, valor_unitario = ?, quantidade_estoque = ? WHERE id_produto = ?";
+
     $stmtUpdate = $conexao->prepare($sqlUpdate);
     $stmtUpdate->bind_param("sdii", $nome, $valor, $quantidade, $id);
 

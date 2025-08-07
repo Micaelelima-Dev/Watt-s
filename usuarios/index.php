@@ -98,10 +98,9 @@ a:hover {
                     <td><?= $usuario['id_usuario'] ?></td>
                     <td><?= $usuario['nome_usuario'] ?></td>
                     <td>
-                        <a href="usuarios/editar.php?id_usuario=<?= $usuario['id_usuario'] ?>"
+                        <a href="editar.php?id_usuario=<?= $usuario['id_usuario'] ?>"
                             class="btn btn-warning btn-sm">Editar</a>
-                        <a href="usuarios/desativar.php?id_usuario=<?= $usuario['id_usuario'] ?>"
-                            class="btn btn-danger btn-sm"
+                        <a href="desativar.php?id_usuario=<?= $usuario['id_usuario'] ?>" class="btn btn-danger btn-sm"
                             onclick="return confirm('Tem certeza que deseja desativar este usuário?');">Desativar</a>
                     </td>
                 </tr>

@@ -8,7 +8,8 @@ if (!isset($_GET['id_produto'])) {
 
 $id = $_GET['id_produto'];
 
-$sql = "DELETE FROM produtos WHERE id_produto = ?";
+// Atualiza a quantidade em estoque para zero
+$sql = "UPDATE produtos SET quantidade_estoque = 0 WHERE id_produto = ?";
 $stmt = $conexao->prepare($sql);
 $stmt->bind_param("i", $id);
 
@@ -16,6 +17,6 @@ if ($stmt->execute()) {
     header("Location: listar.php");
     exit;
 } else {
-    echo "Erro ao excluir produto.";
+    echo "Erro ao zerar estoque do produto.";
 }
 ?>

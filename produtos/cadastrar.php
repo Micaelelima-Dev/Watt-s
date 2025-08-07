@@ -125,21 +125,25 @@ include_once('../includes/conexao.php');
             </svg> Voltar para o Menu principal</a>
 
         <?php
-        if (isset($_POST['cadastrar'])) {
-            $nome = $_POST['nome_produto'];
-            $valor = $_POST['valor_unitario'];
-            $quantidade = $_POST['quantidade_estoque'];
+if (isset($_POST['cadastrar'])) {
+    $nome = $_POST['nome_produto'];
+    $valor = $_POST['valor_unitario'];
+    $quantidade = $_POST['quantidade_estoque'];
 
-            $stmt = $conexao->prepare("INSERT INTO produtos (nome_produto, valor_unitario, quantidade_estoque) VALUES (?, ?, ?)");
-            $stmt->bind_param("sdi", $nome, $valor, $quantidade);
+    if ($quantidade < 0) {
+        echo "<p class='mensagem' style='color: red;'>Quantidade em estoque não pode ser negativa!</p>";
+    } else {
+        $stmt = $conexao->prepare("INSERT INTO produtos (nome_produto, valor_unitario, quantidade_estoque) VALUES (?, ?, ?)");
+        $stmt->bind_param("sdi", $nome, $valor, $quantidade);
 
-            if ($stmt->execute()) {
-                echo "<p class='mensagem' style='color: green;'>Produto cadastrado com sucesso!</p>";
-            } else {
-                echo "<p class='mensagem' style='color: red;'>Erro ao cadastrar produto: " . $stmt->error . "</p>";
-            }
+        if ($stmt->execute()) {
+            echo "<p class='mensagem' style='color: green;'>Produto cadastrado com sucesso!</p>";
+        } else {
+            echo "<p class='mensagem' style='color: red;'>Erro ao cadastrar produto: " . $stmt->error . "</p>";
         }
-        ?>
+    }
+}
+?>
     </div>
 </body>
 

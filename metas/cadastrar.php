@@ -5,20 +5,33 @@ include_once('../includes/conexao.php');
 $funcionarios = $conexao->query("SELECT * FROM funcionarios WHERE ativo = 1");
 
 
+$erro = '';
+
 if (isset($_POST['cadastrar'])) {
     $id_func = $_POST['funcionario'];
     $mes = $_POST['mes'];
     $valor = $_POST['valor'];
 
-    
-    $sql = "INSERT INTO metas (id_funcionario, mes_meta, valor_meta) VALUES (?, ?, ?)";
-    $stmt = $conexao->prepare($sql);
-    $stmt->bind_param("isd", $id_func, $mes, $valor);
-    $stmt->execute();
+    // Verificar duplicidade
+    $verifica = $conexao->prepare("SELECT COUNT(*) FROM metas WHERE id_funcionario = ? AND mes_meta = ?");
+    $verifica->bind_param("is", $id_func, $mes);
+    $verifica->execute();
+    $verifica->bind_result($count);
+    $verifica->fetch();
+    $verifica->close();
 
-    header("Location: listar.php");
-    exit;
+    if ($count > 0) {
+        $erro = "Já existe uma meta cadastrada para esse funcionário nesse mês.";
+    } else {
+        $sql = "INSERT INTO metas (id_funcionario, mes_meta, valor_meta) VALUES (?, ?, ?)";
+        $stmt = $conexao->prepare($sql);
+        $stmt->bind_param("isd", $id_func, $mes, $valor);
+        $stmt->execute();
+        header("Location: listar.php");
+        exit;
+    }
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -27,7 +40,7 @@ if (isset($_POST['cadastrar'])) {
 <head>
     <meta charset="UTF-8">
     <title>Cadastrar Meta | Watt’s</title>
-    <link rel="stylesheet" href="../assets/estilo_padrao.css">
+    <link rel="stylesheet" href="../css/style.css">
     <style>
     .container {
         max-width: 600px;
@@ -121,6 +134,15 @@ if (isset($_POST['cadastrar'])) {
                     <path fill-rule="evenodd"
                         d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5z" />
                 </svg> Voltar para o Menu principal</a>
+
+
+
+            <?php if ($erro): ?>
+            <div style="background-color:#f8d7da; color:#842029; padding:10px; border-radius:5px; margin-bottom:15px;">
+                <?= htmlspecialchars($erro) ?>
+            </div>
+            <?php endif; ?>
+
 
         </form>
     </div>

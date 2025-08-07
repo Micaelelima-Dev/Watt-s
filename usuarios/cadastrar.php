@@ -2,38 +2,37 @@
 include("../includes/conexao.php");
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $nome = $_POST['nome'] ?? '';
     $usuario = $_POST['usuario'] ?? '';
     $senha = $_POST['senha'] ?? '';
-    $status = 1;
+    $status = 'ativo';
 
-    if (!empty($nome) && !empty($usuario) && !empty($senha)) {
-        // Verifica duplicidade de usuário
+    if (!empty($usuario) && !empty($senha)) {
         $check = $conexao->prepare("SELECT id_usuario FROM usuarios WHERE nome_usuario = ?");
         $check->bind_param("s", $usuario);
         $check->execute();
         $check->store_result();
 
         if ($check->num_rows > 0) {
-            echo "<div style='color: red;'>Nome de usuário já está em uso. Escolha outro.</div>";
+            echo "Nome de usuário já está em uso.";
         } else {
             $senhaHash = password_hash($senha, PASSWORD_DEFAULT);
-            $stmt = $conexao->prepare("INSERT INTO usuarios (nome_usuario, usuario, senha, status) VALUES (?, ?, ?, ?)");
-            $stmt->bind_param("sssi", $nome, $usuario, $senhaHash, $status);
+            $stmt = $conexao->prepare("INSERT INTO usuarios (nome_usuario, senha, status) VALUES (?, ?, ?)");
+            $stmt->bind_param("sss", $usuario, $senhaHash, $status);
 
             if ($stmt->execute()) {
-                echo "<div style='color: green;'>Usuário cadastrado com sucesso!</div>";
+                echo "Usuário cadastrado com sucesso!";
             } else {
-                echo "<div style='color: red;'>Erro ao cadastrar usuário: " . $stmt->error . "</div>";
+                echo "Erro ao cadastrar usuário: " . $stmt->error;
             }
             $stmt->close();
         }
         $check->close();
     } else {
-        echo "<div style='color: red;'>Preencha todos os campos.</div>";
+        echo "Preencha todos os campos.";
     }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -79,7 +78,7 @@ h1 {
     <form method="post">
         <div class="mb-3">
             <label for="nome" class="form-label">Nome completo:</label>
-            <input type="text" class="form-control" name="nome" id="nome" required>
+            <input type="text" class="form-control" name="nome" id="nome_usuario" required>
         </div>
         <div class="mb-3">
             <label for="usuario" class="form-label">Usuário:</label>

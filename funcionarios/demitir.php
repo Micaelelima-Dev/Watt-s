@@ -1,30 +1,33 @@
 <?php
 include('../includes/conexao.php');
 
-// Verifica se o ID do funcionário foi enviado pela URL
-if (isset($_GET['funcionario']) && is_numeric($_GET['funcionario'])) {
-    $id_funcionario = $_GET['funcionario'];
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['id_funcionario'], $_POST['acao'])) {
+        $id = intval($_POST['id_funcionario']);
+        $acao = $_POST['acao'];
 
-    // Atualiza o funcionário para inativo (demitido)
-    $sql = "UPDATE funcionarios SET ativo = 0, data_demissao = NOW() WHERE id_funcionario = ?";
-    $stmt = $conexao->prepare($sql);
-    $stmt->bind_param("i", $id_funcionario);
+        if ($acao === 'demitir') {
+            $sql = "UPDATE funcionarios SET ativo = 0, data_demissao = NOW() WHERE id_funcionario = ?";
+        } elseif ($acao === 'ativar') {
+            $sql = "UPDATE funcionarios SET ativo = 1, data_demissao = NULL WHERE id_funcionario = ?";
+        } else {
+            echo "<script>alert('Ação inválida.'); window.location.href='listar.php';</script>";
+            exit;
+        }
 
-    if ($stmt->execute()) {
-        echo "<script>
-            alert('Funcionário demitido com sucesso!');
-            window.location.href = 'listar.php';
-        </script>";
+        $stmt = $conexao->prepare($sql);
+        $stmt->bind_param("i", $id);
+
+        if ($stmt->execute()) {
+            $msg = $acao === 'demitir' ? 'Funcionário demitido com sucesso!' : 'Funcionário ativado com sucesso!';
+            echo "<script>alert('$msg'); window.location.href='listar.php';</script>";
+        } else {
+            echo "<script>alert('Erro ao atualizar funcionário.'); window.location.href='listar.php';</script>";
+        }
     } else {
-        echo "<script>
-            alert('Erro ao demitir o funcionário.');
-            window.location.href = 'listar.php';
-        </script>";
+        echo "<script>alert('Dados incompletos.'); window.location.href='listar.php';</script>";
     }
 } else {
-    echo "<script>
-        alert('Funcionário não especificado.');
-        window.location.href = 'listar.php';
-    </script>";
+    echo "<script>alert('Método inválido.'); window.location.href='listar.php';</script>";
 }
 ?>

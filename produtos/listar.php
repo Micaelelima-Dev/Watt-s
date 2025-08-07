@@ -149,7 +149,7 @@ include_once('../includes/conexao.php');
                         echo "<td>
                                 <div style='display: flex; gap: 6px;'>
                                     <a class='btn btn-editar' href='editar.php?id=" . $produto['id_produto'] . "'>Editar</a>
-                                    <a class='btn btn-excluir' href='excluir.php?id_produto=" . $produto['id_produto'] . "' onclick='return confirm(\"Tem certeza que deseja excluir este produto?\")'>Excluir</a>
+                                    <a class='btn btn-excluir' href='excluir.php?id_produto=" . $produto['id_produto'] . "' onclick='return confirm(\"Tem certeza que deseja zerar este produto?\")'>Zerar</a>
                                 </div>
                             </td>";
 

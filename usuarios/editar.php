@@ -146,7 +146,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 value="<?= htmlspecialchars($usuario['nome_usuario']) ?>" required />
 
             <button type="submit" class="btn btn-primary">Salvar Alterações</button>
-            <a href="../index.php" class="btn btn-secondary">Cancelar</a>
+            <a href="index.php" class="btn btn-secondary">Cancelar</a>
         </form>
     </div>
 </body>
