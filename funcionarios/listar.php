@@ -32,7 +32,6 @@ if ($resultado && $resultado->num_rows > 0) {
     <meta charset="UTF-8" />
     <title>Lista de Funcionários | Watt’s</title>
     <style>
-    /* Estilo padrão Watt's */
     body {
         font-family: 'Segoe UI', sans-serif;
         background-color: #f4f9f6;
@@ -210,72 +209,6 @@ if ($resultado && $resultado->num_rows > 0) {
             </svg> Voltar para o Menu principal
         </a>
     </div>
-
-    <!-- Chart.js CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-    const ctx = document.getElementById('graficoVendasMetas').getContext('2d');
-
-    const nomes = <?php echo json_encode($funcionarios); ?>;
-    const vendas = <?php echo json_encode($vendas); ?>;
-    const metas = <?php echo json_encode($metas); ?>;
-
-    const data = {
-        labels: nomes,
-        datasets: [{
-                label: 'Vendas Acumuladas',
-                data: vendas,
-                backgroundColor: 'rgba(7, 121, 16, 0.7)', // verde Watt's
-            },
-            {
-                label: 'Metas',
-                data: metas,
-                backgroundColor: 'rgba(71, 183, 88, 0.7)', // verde claro Watt's
-            }
-        ]
-    };
-
-    const config = {
-        type: 'bar',
-        data: data,
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    position: 'top',
-                    labels: {
-                        font: {
-                            family: "'Segoe UI', sans-serif"
-                        }
-                    }
-                },
-                tooltip: {
-                    mode: 'index',
-                    intersect: false,
-                    callbacks: {
-                        label: function(context) {
-                            return context.dataset.label + ': R$ ' + context.parsed.y.toFixed(2).replace('.',
-                                ',');
-                        }
-                    }
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: {
-                        callback: function(value) {
-                            return 'R$ ' + value.toLocaleString('pt-BR', {
-                                minimumFractionDigits: 2
-                            });
-                        }
-                    }
-                }
-            }
-        }
-    };
-
-    const graficoVendasMetas = new Chart(ctx, config);
     </script>
 </body>
 

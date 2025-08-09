@@ -1,5 +1,5 @@
 <?php
-include("../includes/conexao.php");
+include_once("../includes/conexao.php");
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $usuario = $_POST['usuario'] ?? '';

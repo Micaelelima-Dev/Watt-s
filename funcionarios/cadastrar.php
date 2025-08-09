@@ -1,5 +1,5 @@
 <?php
-include('../includes/conexao.php');
+include_once('../includes/conexao.php'); // conexão
 ?>
 
 <!DOCTYPE html>
@@ -128,9 +128,10 @@ include('../includes/conexao.php');
 
         <?php
         if (isset($_POST['cadastrar'])) {
-    $nome_funcionario = $_POST['nome'];
-    $cpf = $_POST['cpf'];
-    $data_contratacao = $_POST['data_contratacao'];
+            // Leitura dos campos
+            $nome_funcionario = $_POST['nome'];
+            $cpf = $_POST['cpf'];
+            $data_contratacao = $_POST['data_contratacao'];
 
         if ($conexao) {
             // Verifica se já existe CPF ou nome no banco
@@ -140,7 +141,7 @@ include('../includes/conexao.php');
             $resultado = $stmt_verifica->get_result();
 
             if ($resultado->num_rows > 0) {
-                echo "<p class='mensagem' style='color: red;'>Erro: Já existe um funcionário cadastrado com este CPF ou nome.</p>";
+                echo "<p class='mensagem' style='color: red;'>Erro: Já existe um funcionário cadastrado com este CPF.</p>";
             } else {
                 // Cadastro permitido
                 $stmt = $conexao->prepare("INSERT INTO funcionarios (nome_funcionario, cpf, data_contratacao, data_demissao, ativo) VALUES (?, ?, ?, NULL, 1)");
@@ -163,6 +164,7 @@ include('../includes/conexao.php');
 </body>
 
 <script>
+//Js para formatação de cpf
 document.getElementById('cpf').addEventListener('input', function(e) {
     let cpf = e.target.value.replace(/\D/g, '');
     if (cpf.length > 11) cpf = cpf.slice(0, 11);
