@@ -108,7 +108,7 @@ include_once('../includes/conexao.php'); // conexão
             </div>
 
             <div class="form-group">
-                <label for="data_contratacao">Data de Admissão:</label>
+                <label for="data_contratacao">Data de Contratação:</label>
                 <input type="date" id="data_contratacao" name="data_contratacao" required>
             </div>
 

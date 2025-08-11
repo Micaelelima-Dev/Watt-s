@@ -42,7 +42,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
 
-
     <style>
     body {
         background-color: #ffffff;
@@ -130,7 +129,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <body>
     <div class="login-container">
-        <img class="m-auto" src="cd2283c7-bfa2-4143-84cf-7c2c7b526132.jpg" alt="">
+        <img class="m-auto" src="cd2283c7-bfa2-4143-84cf-7c2c7b526132.jpg" alt="Logo do sistema">
         <h4>Login - Watt's Soluções Elétricas <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                 fill="currentColor" class="bi bi-lightning" viewBox="0 0 16 16">
                 <path
@@ -141,7 +140,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 required><label for="senha">Senha</label><input type="password" name="senha" id="senha" required><button
                 type="submit" class="btn btn-primary">Entrar</button></form>
     </div>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous">
     </script>

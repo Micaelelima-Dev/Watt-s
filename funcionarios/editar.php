@@ -26,7 +26,8 @@ $funcionario = $resultado->fetch_assoc();
 $data_demissao = $funcionario['data_demissao'] ?? null;
 $data_demissao_preenchida = $data_demissao ? $data_demissao : date('Y-m-d');
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+try {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nome = $_POST['nome'];
     $cpf = $_POST['cpf'];
     $data_contratacao = $_POST['data_contratacao'];
@@ -36,13 +37,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $sqlUpdate = "UPDATE funcionarios SET nome_funcionario = ?, cpf = ?, data_contratacao = ?, data_demissao = ? WHERE id_funcionario = ?";
     $stmtUpdate = $conexao->prepare($sqlUpdate);
     $stmtUpdate->bind_param("ssssi", $nome, $cpf, $data_contratacao, $data_demissao, $id);
-
-    if ($stmtUpdate->execute()) {
-        echo "<script>alert('Funcionário atualizado com sucesso!'); window.location.href='listar.php';</script>";
-    } else {
-        echo "Erro ao atualizar: " . $stmtUpdate->error;
+    $stmtUpdate->execute();
+            echo "<script>alert('Funcionário atualizado com sucesso!'); window.location.href='listar.php';</script>";
     }
-}
+} catch (Exception $e) {echo "<script>alert('CPF já cadastrado ou erro de conexão com o servidor'); window.location.onload();</script>";}
+
 
 ?>
 

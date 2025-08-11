@@ -22,7 +22,7 @@ body {
 
 .btn-voltar:hover {
     background-color: #81c784;
-    color: #00251a;
+    color: #4CAF50;
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }

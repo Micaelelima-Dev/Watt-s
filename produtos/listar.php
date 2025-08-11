@@ -139,8 +139,9 @@ include_once('../includes/conexao.php');
                 $sql = "SELECT * FROM produtos";
                 $resultado = $conexao->query($sql);
 
+                // confirm() direto no link para evitar ações acidentais de zeramento
                 if ($resultado->num_rows > 0) {
-                    while ($produto = $resultado->fetch_assoc()) {
+                    while ($produto = $resultado->fetch_assoc()) { //Loop e renderização
                         echo "<tr>";
                         echo "<td>" . $produto['id_produto'] . "</td>";
                         echo "<td>" . $produto['nome_produto'] . "</td>";
@@ -149,7 +150,7 @@ include_once('../includes/conexao.php');
                         echo "<td>
                                 <div style='display: flex; gap: 6px;'>
                                     <a class='btn btn-editar' href='editar.php?id=" . $produto['id_produto'] . "'>Editar</a>
-                                    <a class='btn btn-excluir' href='excluir.php?id_produto=" . $produto['id_produto'] . "' onclick='return confirm(\"Tem certeza que deseja zerar este produto?\")'>Zerar</a>
+                                    <a class='btn btn-excluir' href='excluir.php?id_produto=" . $produto['id_produto'] . "' onclick='return confirm(\"Tem certeza que deseja zerar este produto?\")'>Zerar</a> 
                                 </div>
                             </td>";
 
