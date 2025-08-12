@@ -47,6 +47,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="UTF-8">
     <title>Editar Meta</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
     <style>
     body {
         font-family: 'Segoe UI', sans-serif;
@@ -93,6 +95,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         background-color: #ccc;
         color: black;
     }
+
+    .btn-voltar {
+        display: inline-block;
+        margin-top: 20px;
+        color: #4CAF50;
+        text-decoration: none;
+
+    }
     </style>
 </head>
 
@@ -109,7 +119,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 required>
 
             <button type="submit" class="btn btn-success">Atualizar</button>
-            <a href="listar.php" class="btn btn-secondary">Cancelar</a>
+            <a href="listar.php" class="btn btn-secondary">Cancelar</a><br>
+            <a href="../dashboard.php" class="btn-voltar"><i class="fa-solid fa-house icon"></i> Voltar para o Menu
+                principal</a>
         </form>
     </div>
 </body>

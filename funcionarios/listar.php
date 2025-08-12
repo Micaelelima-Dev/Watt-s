@@ -2,13 +2,13 @@
 include('../includes/conexao.php');
 
 $sql = "SELECT f.id_funcionario, f.nome_funcionario, f.cpf, f.data_contratacao, f.ativo, f.data_demissao,
-        COALESCE(SUM(v.valor_total), 0) AS total_vendas_ano,
-        COALESCE(SUM(m.valor_meta), 0) AS total_metas_ano
-    FROM funcionarios f
-    LEFT JOIN vendas v ON v.id_funcionario = f.id_funcionario AND YEAR(v.data_venda) = YEAR(CURDATE())
-    LEFT JOIN metas m ON m.id_funcionario = f.id_funcionario AND YEAR(STR_TO_DATE(CONCAT(m.mes_meta, '-01'), '%Y-%m-%d')) = YEAR(CURDATE())
-    GROUP BY f.id_funcionario
-    ORDER BY f.nome_funcionario ASC";
+    COALESCE(SUM(v.valor_total), 0) AS total_vendas_ano,
+    COALESCE(m.valor_meta, 0) AS meta_mes_atual
+FROM funcionarios f
+LEFT JOIN vendas v ON v.id_funcionario = f.id_funcionario AND YEAR(v.data_venda) = YEAR(CURDATE())
+LEFT JOIN metas m ON m.id_funcionario = f.id_funcionario AND m.mes_meta = DATE_FORMAT(CURDATE(), '%Y-%m')
+GROUP BY f.id_funcionario
+ORDER BY f.nome_funcionario ASC";
 
 $resultado = $conexao->query($sql);
 
@@ -20,7 +20,7 @@ if ($resultado && $resultado->num_rows > 0) {
     while ($row = $resultado->fetch_assoc()) {
         $funcionarios[] = $row['nome_funcionario'];
         $vendas[] = (float)$row['total_vendas_ano'];
-        $metas[] = (float)$row['total_metas_ano'];
+        $metas[] = (float)$row['meta_mes_atual'];
     }
 }
 ?>
@@ -31,6 +31,8 @@ if ($resultado && $resultado->num_rows > 0) {
 <head>
     <meta charset="UTF-8" />
     <title>Lista de Funcionários | Watt’s</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
     <style>
     body {
         font-family: 'Segoe UI', sans-serif;
@@ -128,13 +130,6 @@ if ($resultado && $resultado->num_rows > 0) {
         font-weight: bold;
         font-size: 0.9em;
     }
-
-    /* Container do gráfico */
-    #grafico-container {
-        width: 100%;
-        max-width: 900px;
-        margin: 0 auto;
-    }
     </style>
 </head>
 
@@ -150,7 +145,7 @@ if ($resultado && $resultado->num_rows > 0) {
                     <th>Data de Admissão</th>
                     <th>Ativo</th>
                     <th>Data de Demissão</th>
-                    <th>Vendas / Meta (Ano Atual)</th>
+                    <th>Vendas / Meta </th>
                     <th>Ações</th>
                 </tr>
             </thead>
@@ -170,7 +165,8 @@ if ($resultado && $resultado->num_rows > 0) {
                             ? htmlspecialchars(date('d/m/Y', strtotime($func['data_demissao'])))
                             : '—')
                         . "</td>";
-                    echo "<td class='vendas-meta'>R$ " . number_format($func['total_vendas_ano'], 2, ',', '.') . " / R$ " . number_format($func['total_metas_ano'], 2, ',', '.') . "</td>";
+                    echo "<td class='vendas-meta'>R$ " . number_format($func['total_vendas_ano'], 2, ',', '.') . " / R$ " . number_format($func['meta_mes_atual'], 2, ',', '.') . "</td>";
+
                     echo "<td>
                             <a href='editar.php?id=" . $func['id_funcionario'] . "'>Editar</a> | ";
 
@@ -187,10 +183,6 @@ if ($resultado && $resultado->num_rows > 0) {
             </tbody>
         </table>
 
-        <div id="grafico-container">
-            <canvas id="graficoVendasMetas"></canvas>
-        </div>
-
         <a href="cadastrar.php" class="btn-voltar">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                 class="bi bi-person-fill-add" viewBox="0 0 16 16">
@@ -201,15 +193,9 @@ if ($resultado && $resultado->num_rows > 0) {
             </svg> Cadastrar novo funcionário
         </a><br>
 
-        <a href="../dashboard.php" class="btn-voltar">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                class="bi bi-arrow-left-circle" viewBox="0 0 16 16">
-                <path fill-rule="evenodd"
-                    d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5z" />
-            </svg> Voltar para o Menu principal
-        </a>
+        <a href="../dashboard.php" class="btn-voltar"><i class="fa-solid fa-house icon"></i> Voltar para o Menu
+            principal</a>
     </div>
-    </script>
 </body>
 
 </html>

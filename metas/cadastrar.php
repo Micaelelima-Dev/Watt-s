@@ -12,25 +12,30 @@ if (isset($_POST['cadastrar'])) {
     $mes = $_POST['mes'];
     $valor = $_POST['valor'];
 
-    // Verificar duplicidade
-    $verifica = $conexao->prepare("SELECT COUNT(*) FROM metas WHERE id_funcionario = ? AND mes_meta = ?");
+    // Verificar se meta já existe
+    $verifica = $conexao->prepare("SELECT id_meta FROM metas WHERE id_funcionario = ? AND mes_meta = ?");
     $verifica->bind_param("is", $id_func, $mes);
     $verifica->execute();
-    $verifica->bind_result($count);
+    $verifica->bind_result($id_meta_existente);
     $verifica->fetch();
     $verifica->close();
 
-    if ($count > 0) {
-        $erro = "Já existe uma meta cadastrada para esse funcionário nesse mês.";
+    if ($id_meta_existente) {
+        // Atualiza meta
+        $atualiza = $conexao->prepare("UPDATE metas SET valor_meta = ? WHERE id_meta = ?");
+        $atualiza->bind_param("di", $valor, $id_meta_existente);
+        $atualiza->execute();
     } else {
-        $sql = "INSERT INTO metas (id_funcionario, mes_meta, valor_meta) VALUES (?, ?, ?)";
-        $stmt = $conexao->prepare($sql);
-        $stmt->bind_param("isd", $id_func, $mes, $valor);
-        $stmt->execute();
-        header("Location: listar.php");
-        exit;
+        // Insere nova meta
+        $insere = $conexao->prepare("INSERT INTO metas (id_funcionario, mes_meta, valor_meta) VALUES (?, ?, ?)");
+        $insere->bind_param("isd", $id_func, $mes, $valor);
+        $insere->execute();
     }
+
+    header("Location: listar.php");
+    exit;
 }
+
 
 ?>
 
@@ -40,7 +45,8 @@ if (isset($_POST['cadastrar'])) {
 <head>
     <meta charset="UTF-8">
     <title>Cadastrar Meta | Watt’s</title>
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
     <style>
     .container {
         max-width: 600px;
@@ -96,10 +102,6 @@ if (isset($_POST['cadastrar'])) {
         color: #077910;
         text-decoration: none;
     }
-
-    .btn-voltar:hover {
-        background-color: #bbb;
-    }
     </style>
 </head>
 
@@ -129,13 +131,8 @@ if (isset($_POST['cadastrar'])) {
                         d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0M4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5z" />
                 </svg>
                 Ir á lista de metas</a>
-            <a href="../dashboard.php" class="btn-voltar"> <svg xmlns="http://www.w3.org/2000/svg" width="16"
-                    height="16" fill="currentColor" class="bi bi-arrow-left-circle" viewBox="0 0 16 16">
-                    <path fill-rule="evenodd"
-                        d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5z" />
-                </svg> Voltar para o Menu principal</a>
-
-
+            <a href="../dashboard.php" class="btn-voltar"><i class="fa-solid fa-house icon"></i> Voltar para o Menu
+                principal</a>
 
             <?php if ($erro): ?>
             <div style="background-color:#f8d7da; color:#842029; padding:10px; border-radius:5px; margin-bottom:15px;">

@@ -45,6 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8" />
     <title>Editar Usuário - Watt’s</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
     body {
         background-color: rgb(255, 255, 255);
@@ -111,6 +112,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         display: inline-block;
         text-align: center;
         text-decoration: none;
+        background-color: #4caf50;
     }
 
     .btn-primary {
@@ -134,6 +136,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     .btn-secondary:hover {
         background-color: #80cbc4;
     }
+
+    .btn-voltar {
+        display: inline-block;
+        margin-top: 20px;
+        color: #4CAF50;
+        text-decoration: none;
+
+    }
     </style>
 </head>
 
@@ -146,7 +156,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 value="<?= htmlspecialchars($usuario['nome_usuario']) ?>" required />
 
             <button type="submit" class="btn btn-primary">Salvar Alterações</button>
-            <a href="index.php" class="btn btn-secondary">Cancelar</a>
+            <a href="index.php" class="btn btn-secondary">Cancelar</a><br>
+            <a href="../dashboard.php" class="btn-voltar"><i class="fa-solid fa-house icon"></i> Voltar para o Menu
+                principal</a>
         </form>
     </div>
 </body>

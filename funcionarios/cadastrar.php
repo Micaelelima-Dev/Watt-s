@@ -9,6 +9,9 @@ include_once('../includes/conexao.php'); // conexão
 <head>
     <meta charset="UTF-8">
     <title>Cadastro de Funcionários | Watt’s</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+
     <style>
     body {
         font-family: 'Segoe UI', sans-serif;
@@ -104,7 +107,7 @@ include_once('../includes/conexao.php'); // conexão
 
             <div class="form-group">
                 <label for="cpf">CPF:</label>
-                <input type="text" id="cpf" name="cpf" required>
+                <input type="text" id="cpf" name="cpf" maxlength="14" placeholder="000.000.000-00" required>
             </div>
 
             <div class="form-group">
@@ -115,16 +118,10 @@ include_once('../includes/conexao.php'); // conexão
             <button type="submit" name="cadastrar">Cadastrar</button>
         </form>
 
-        <a href="../funcionarios/listar.php" class="btn-voltar"> <svg xmlns="http://www.w3.org/2000/svg" width="16"
-                height="16" fill="currentColor" class="bi bi-arrow-right-circle" viewBox="0 0 16 16">
-                <path fill-rule="evenodd"
-                    d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0M4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5z" />
-            </svg> Ir para lista de funcionários</a>
-        <a href="../dashboard.php" class="btn-voltar"> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                fill="currentColor" class="bi bi-arrow-left-circle" viewBox="0 0 16 16">
-                <path fill-rule="evenodd"
-                    d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5z" />
-            </svg> Voltar para o Menu principal</a>
+        <a href="../funcionarios/listar.php" class="btn-voltar"><i class="fa-solid fa-arrow-left icon"></i> Ir para
+            lista de funcionários</a>
+        <a href="../dashboard.php" class="btn-voltar"><i class="fa-solid fa-house icon"></i> Voltar para o Menu
+            principal</a>
 
         <?php
         if (isset($_POST['cadastrar'])) {
@@ -167,7 +164,7 @@ include_once('../includes/conexao.php'); // conexão
 //Js para formatação de cpf
 document.getElementById('cpf').addEventListener('input', function(e) {
     let cpf = e.target.value.replace(/\D/g, '');
-    if (cpf.length > 11) cpf = cpf.slice(0, 11);
+    if (cpf.length !== 11) cpf = cpf.slice(0, 11);
     cpf = cpf.replace(/(\d{3})(\d)/, '$1.$2');
     cpf = cpf.replace(/(\d{3})(\d)/, '$1.$2');
     cpf = cpf.replace(/(\d{3})(\d{1,2})$/, '$1-$2');

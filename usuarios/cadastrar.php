@@ -41,6 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta charset="UTF-8">
     <title>Cadastrar Usuário</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <style>
@@ -71,6 +72,14 @@ h1 {
     color: #337a5b;
     margin-bottom: 30px;
 }
+
+.btn-voltar {
+    display: inline-block;
+    margin-top: 20px;
+    color: #4CAF50;
+    text-decoration: none;
+
+}
 </style>
 
 <body class="container">
@@ -88,8 +97,9 @@ h1 {
             <label for="senha" class="form-label">Senha:</label>
             <input type="password" class="form-control" name="senha" id="senha" required>
         </div>
-        <button type="submit" class="btn btn-success">Cadastrar</button>
-        <a href="./index.php" class="btn btn-secondary">Voltar</a>
+        <button type="submit" class="btn btn-success">Cadastrar</button> <br>
+        <a href="../dashboard.php" class="btn-voltar"><i class="fa-solid fa-house icon"></i> Voltar para o Menu
+            principal</a>
     </form>
 </body>
 

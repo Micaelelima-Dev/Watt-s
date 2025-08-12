@@ -1,5 +1,15 @@
 <?php
+session_start();
+
+$erro = '';
+if (isset($_SESSION['erro_venda'])) {
+    $erro = $_SESSION['erro_venda'];
+    unset($_SESSION['erro_venda']);
+}
+
+
 include_once('../includes/conexao.php');
+
 
 // Buscar funcionários ativos
 $funcionarios = $conexao->query("SELECT * FROM funcionarios WHERE ativo = 1");
@@ -108,6 +118,26 @@ $produtos = $conexao->query("SELECT * FROM produtos WHERE quantidade_estoque > 0
 
     <h2><i class="fa-solid fa-cart-plus icon"></i>Nova Venda</h2>
 
+    <?php if ($erro): ?>
+    <div style="
+        background-color: #fdecea;
+        color: #b71c1c;
+        border: 1px solid #f5c6cb;
+        padding: 12px 20px;
+        border-radius: 6px;
+        margin-bottom: 20px;
+        font-weight: 600;
+        box-shadow: 0 2px 6px rgba(183, 28, 28, 0.2);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    ">
+        <span style="font-size: 1.4rem;">❌</span>
+        <span><?= htmlspecialchars($erro) ?></span>
+    </div>
+    <?php endif; ?>
+
+
     <form action="detalhes.php" method="POST">
 
         <label><i class="fa-solid fa-user icon"></i>Funcionário:</label>
@@ -143,6 +173,7 @@ $produtos = $conexao->query("SELECT * FROM produtos WHERE quantidade_estoque > 0
             echo "<p>Nenhum produto disponível.</p>";
         endif;
         ?>
+
 
         <button type="submit"><i class="fa-solid fa-floppy-disk icon"></i>Salvar Venda</button>
     </form>

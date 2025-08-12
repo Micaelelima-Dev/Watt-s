@@ -147,9 +147,6 @@ if (!isset($_SESSION['usuario'])) {
         document.body.classList.toggle('dark-mode');
     }
     </script>
-
-
-
 </body>
 
 </html>
