@@ -173,7 +173,7 @@ if ($resultado && $resultado->num_rows > 0) {
                     echo "<form method='post' action='demitir.php' onsubmit='return confirm(\"Tem certeza?\");'>";
                     echo "<input type='hidden' name='id_funcionario' value='" . $func['id_funcionario'] . "'>";
                     echo "<input type='hidden' name='acao' value='" . ($func['ativo'] ? 'demitir' : 'ativar') . "'>";
-                    echo "<button type='submit'>" . ($func['ativo'] ? 'Demitir' : 'Ativar') . "</button>";
+                    echo "<button type='submit'>" . ($func['ativo'] ? 'inativar' : 'Ativar') . "</button>";
                     echo "</form>";
 
                     echo "</td>";

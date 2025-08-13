@@ -1,4 +1,5 @@
 <?php
+include('../includes/verifica_login.php');
 include_once('../includes/conexao.php'); // conexão
 ?>
 

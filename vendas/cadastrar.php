@@ -110,15 +110,18 @@ $produtos = $conexao->query("SELECT * FROM produtos WHERE quantidade_estoque > 0
 </head>
 
 <body>
-
     <h2><i class="fa-solid fa-cart-plus icon"></i>Nova Venda</h2>
+
+    <div style="text-align: center;">
+        <a href="listar.php" class="voltar"><i class="fa-solid fa-arrow-left icon"></i>Ver Vendas</a>
+        <a href="../dashboard.php" class="menu"><i class="fa-solid fa-house icon"></i>Menu Principal</a>
+    </div>
 
     <?php if ($erro): ?>
     <div style="
         background-color: #fdecea;
         color: #b71c1c;
         border: 1px solid #f5c6cb;
-        padding: 12px 20px;
         border-radius: 6px;
         margin-bottom: 20px;
         font-weight: 600;
@@ -172,12 +175,6 @@ $produtos = $conexao->query("SELECT * FROM produtos WHERE quantidade_estoque > 0
 
         <button type="submit"><i class="fa-solid fa-floppy-disk icon"></i>Salvar Venda</button>
     </form>
-
-    <div style="text-align: center;">
-        <a href="listar.php" class="voltar"><i class="fa-solid fa-arrow-left icon"></i>Ver Vendas</a>
-        <a href="../dashboard.php" class="menu"><i class="fa-solid fa-house icon"></i>Menu Principal</a>
-    </div>
-
 </body>
 
 </html>
