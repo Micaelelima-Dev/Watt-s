@@ -129,7 +129,7 @@ if (isset($_POST['cadastrar'])) {
     $valor = $_POST['valor_unitario'];
     $quantidade = $_POST['quantidade_estoque'];
 
-    if ($quantidade < 0) {
+    if ($quantidade < 0) { // condição caso o estoque for negativo, se sim retorna mensagem senão cadastra o produto
         echo "<p class='mensagem' style='color: red;'>Quantidade em estoque não pode ser negativa!</p>";
     } else {
         $stmt = $conexao->prepare("INSERT INTO produtos (nome_produto, valor_unitario, quantidade_estoque) VALUES (?, ?, ?)");

@@ -14,7 +14,7 @@ include_once('../includes/conexao.php');
 // Buscar funcionários ativos
 $funcionarios = $conexao->query("SELECT * FROM funcionarios WHERE ativo = 1");
 
-// Buscar produtos
+// Buscar produtos, produtos só aparecem para adicionar na venda se tiver estoque superior a 0
 $produtos = $conexao->query("SELECT * FROM produtos WHERE quantidade_estoque > 0");
 
 ?>
@@ -94,18 +94,13 @@ $produtos = $conexao->query("SELECT * FROM produtos WHERE quantidade_estoque > 0
     a.menu {
         display: inline-block;
         margin-top: 20px;
-        background-color: #888;
-        color: #fff;
+        color: #3f7d3f;
         padding: 8px 15px;
         text-decoration: none;
         border-radius: 8px;
         font-weight: bold;
     }
 
-    a.voltar:hover,
-    a.menu:hover {
-        background-color: #555;
-    }
 
     .icon {
         margin-right: 6px;

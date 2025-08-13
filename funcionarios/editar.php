@@ -26,7 +26,7 @@ $funcionario = $resultado->fetch_assoc();
 $data_demissao = $funcionario['data_demissao'] ?? null;
 $data_demissao_preenchida = $data_demissao ? $data_demissao : date('Y-m-d');
 
-try {
+try { //excessão
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nome = $_POST['nome'];
     $cpf = $_POST['cpf'];
